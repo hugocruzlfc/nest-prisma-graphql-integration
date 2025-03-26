@@ -7,10 +7,8 @@ import { join } from 'path';
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      typePaths: ['./**/*.graphql'],
-      definitions: {
-        path: join(process.cwd(), 'src/graphql.ts'),
-      },
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      sortSchema: true,
     }),
   ],
 })
