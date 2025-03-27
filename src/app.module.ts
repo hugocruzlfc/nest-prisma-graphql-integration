@@ -1,17 +1,9 @@
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import 'reflect-metadata';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { GraphQLModule } from '@nestjs/graphql';
-import { join } from 'path';
+import { GraphqlAdapterModule } from './shared/infrastructure/modules/graphql-adapter.module';
 
 @Module({
-  imports: [
-    CqrsModule.forRoot(),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      sortSchema: true,
-    }),
-  ],
+  imports: [CqrsModule.forRoot(), GraphqlAdapterModule],
 })
 export class AppModule {}
