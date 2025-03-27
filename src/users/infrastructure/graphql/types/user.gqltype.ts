@@ -3,8 +3,8 @@ import { Post } from '@/posts/infrastructure/graphql/types/post.gqltype';
 
 @ObjectType({ description: 'User system' })
 export class User {
-  @Field((type) => Int)
-  id: number;
+  @Field()
+  id: string;
 
   @Field()
   email: string;

@@ -1,3 +1,4 @@
+import { SortOrder } from '@/shared/aplications/types';
 import { InputType, Field } from '@nestjs/graphql';
 import { IsString, MinLength, IsBoolean, IsOptional } from 'class-validator';
 
@@ -12,9 +13,10 @@ export class CreatePostInput {
   @IsString()
   @IsOptional()
   content?: string | null;
+}
 
-  @Field((type) => Boolean, { nullable: true })
-  @IsBoolean()
-  @IsOptional()
-  published?: boolean | null;
+@InputType()
+export class PostOrderByUpdatedAtInput {
+  @Field((type) => SortOrder)
+  updatedAt: SortOrder;
 }

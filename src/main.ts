@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ConsoleLogger } from '@nestjs/common';
+import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -10,6 +10,7 @@ async function bootstrap() {
   });
 
   // app.enableShutdownHooks();
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000, () => {
     console.log(`
        🚀 Server ready at: http://localhost:3000/graphql

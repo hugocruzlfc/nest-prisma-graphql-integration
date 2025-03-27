@@ -5,8 +5,8 @@ import { User } from '@/users/infrastructure/graphql/types/user.gqltype';
   description: 'A post created by a user',
 })
 export class Post {
-  @Field((type) => Int)
-  id: number;
+  @Field()
+  id: string;
 
   @Field((type) => Date)
   createdAt: Date;
