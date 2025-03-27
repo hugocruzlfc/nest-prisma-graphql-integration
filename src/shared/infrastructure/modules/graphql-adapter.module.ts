@@ -1,4 +1,4 @@
-import { SortOrder } from '@/shared/aplications/types';
+import { SortOrder } from '@/shared/domain/types/types-enum';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule, registerEnumType } from '@nestjs/graphql';

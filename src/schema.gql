@@ -14,11 +14,11 @@ input CreateUserInput {
 }
 
 type Mutation {
-  createDraft(authorEmail: String!, data: CreatePostInput!): Post!
+  create_draft(authorEmail: String!, data: CreatePostInput!): Post!
   create_user(data: CreateUserInput!): User!
-  deletePost(id: Int!): Post
-  incrementPostViewCount(id: String!): Post!
-  togglePublishPost(id: String!): Post
+  delete_post(id: String!): Post
+  increment_post_view(id: String!): Post!
+  toggle_publish_post(id: String!): Post
 }
 
 """A post created by a user"""
@@ -43,7 +43,7 @@ type Query {
   all_users(skip: Int, take: Int): [User!]!
   drafts_by_user(userUniqueInput: UserUniqueInput!): [Post!]
   feed(orderBy: PostOrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): [Post!]!
-  postById(id: String!): Post
+  post_by_id(id: String!): Post
 }
 
 enum SortOrder {

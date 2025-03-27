@@ -1,4 +1,4 @@
-import { SortOrder } from '@/shared/aplications/types';
+import { SortOrder } from '@/shared/domain/types/types-enum';
 import { InputType, Field } from '@nestjs/graphql';
 import { IsString, MinLength, IsBoolean, IsOptional } from 'class-validator';
 
