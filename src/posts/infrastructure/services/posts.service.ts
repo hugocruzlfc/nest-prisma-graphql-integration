@@ -1,4 +1,5 @@
 import { PostOrderByUpdatedAt } from '@/posts/domain/interfaces/post-order-by-updated';
+import { MeasureExecutionTime } from '@/shared/infrastructure/decorators/execution-time.decorator';
 import { PrismaService } from '@/shared/infrastructure/services/prisma.service';
 import { Post } from '@/users/domain/interfaces/post.interface';
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -39,6 +40,7 @@ export class PostsService {
     }
   }
 
+  @MeasureExecutionTime({ logLevel: 'debug', timerName: 'getFeed()' })
   async getFeed(
     searchString?: string,
     skip?: number,
