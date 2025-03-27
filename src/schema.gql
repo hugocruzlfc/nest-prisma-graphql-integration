@@ -40,7 +40,7 @@ input PostOrderByUpdatedAtInput {
 }
 
 type Query {
-  allUsers(skip: Int, take: Int): [User!]!
+  all_users(skip: Int, take: Int): [User!]!
   draftsByUser(userUniqueInput: UserUniqueInput!): [Post!]
   feed(orderBy: PostOrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): [Post!]!
   postById(id: String!): Post

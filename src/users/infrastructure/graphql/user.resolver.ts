@@ -13,10 +13,16 @@ import { User } from './types/user.gqltype';
 import { Post } from '@/posts/infrastructure/graphql/types/post.gqltype';
 import { CreateUserInput, UserUniqueInput } from './dtos/create-user.gqlinput';
 import { PrismaService } from '@/shared/infrastructure/services/prisma.service';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { GetUsersQuery } from '@/users/aplication/queries/impl/get-users.query';
 
 @Resolver(User)
 export class UserResolver {
-  constructor(@Inject(PrismaService) private prismaService: PrismaService) {}
+  constructor(
+    @Inject(PrismaService) private prismaService: PrismaService,
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
 
   @ResolveField(() => [Post])
   async posts(@Root() user: User): Promise<Post[]> {
@@ -43,14 +49,11 @@ export class UserResolver {
   }
 
   @Query(() => [User])
-  async allUsers(
+  async all_users(
     @Args('skip', { type: () => Int, nullable: true }) skip?: number,
     @Args('take', { type: () => Int, nullable: true }) take?: number,
   ): Promise<User[]> {
-    return this.prismaService.user.findMany({
-      skip,
-      take,
-    });
+    return this.queryBus.execute(new GetUsersQuery(skip || 0, take || 10));
   }
 
   @Query(() => [Post], { nullable: true })
