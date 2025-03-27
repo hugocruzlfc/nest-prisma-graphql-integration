@@ -15,9 +15,9 @@ input CreateUserInput {
 
 type Mutation {
   createDraft(authorEmail: String!, data: CreatePostInput!): Post!
+  create_user(data: CreateUserInput!): User!
   deletePost(id: Int!): Post
   incrementPostViewCount(id: String!): Post!
-  signupUser(data: CreateUserInput!): User!
   togglePublishPost(id: String!): Post
 }
 
@@ -41,7 +41,7 @@ input PostOrderByUpdatedAtInput {
 
 type Query {
   all_users(skip: Int, take: Int): [User!]!
-  draftsByUser(userUniqueInput: UserUniqueInput!): [Post!]
+  drafts_by_user(userUniqueInput: UserUniqueInput!): [Post!]
   feed(orderBy: PostOrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): [Post!]!
   postById(id: String!): Post
 }

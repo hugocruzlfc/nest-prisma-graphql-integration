@@ -14,42 +14,32 @@ import { Post } from '@/posts/infrastructure/graphql/types/post.gqltype';
 import { CreateUserInput, UserUniqueInput } from './dtos/create-user.gqlinput';
 import { PrismaService } from '@/shared/infrastructure/services/prisma.service';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { GetUsersQuery } from '@/users/aplication/queries/impl/get-users.query';
+import { GetUsersQuery } from '@/users/application/queries/impl/get-users.query';
+import { GetDraftsByUserQuery } from '@/users/application/queries/impl/get-drafts-by-user';
+import { CreateUserCommand } from '@/users/application/commands/impl/create-user.command';
+import { GetUserPostsQuery } from '@/users/application/queries/impl/get-user-posts.query';
 
 @Resolver(User)
 export class UserResolver {
   constructor(
-    @Inject(PrismaService) private prismaService: PrismaService,
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
 
   @ResolveField(() => [Post])
-  async posts(@Root() user: User): Promise<Post[]> {
-    const posts = await this.prismaService.user
-      .findUnique({ where: { id: user.id } })
-      .posts();
-    return posts || [];
+  posts(@Root() user: User): Promise<Post[]> {
+    return this.queryBus.execute(new GetUserPostsQuery(user.id));
   }
 
   @Mutation(() => User)
-  async signupUser(@Args('data') data: CreateUserInput): Promise<User> {
-    const postData = data.posts?.map((post) => ({
-      title: post.title,
-      content: post.content || undefined,
-    }));
-
-    return this.prismaService.user.create({
-      data: {
-        email: data.email,
-        name: data.name,
-        posts: { create: postData },
-      },
-    });
+  create_user(@Args('data') data: CreateUserInput): Promise<User> {
+    return this.commandBus.execute(
+      new CreateUserCommand(data.email, data.name, data.posts),
+    );
   }
 
   @Query(() => [User])
-  async all_users(
+  all_users(
     @Args('skip', { type: () => Int, nullable: true }) skip?: number,
     @Args('take', { type: () => Int, nullable: true }) take?: number,
   ): Promise<User[]> {
@@ -57,17 +47,12 @@ export class UserResolver {
   }
 
   @Query(() => [Post], { nullable: true })
-  async draftsByUser(
+  drafts_by_user(
     @Args('userUniqueInput')
     userUniqueInput: UserUniqueInput,
   ): Promise<Post[] | null> {
-    return this.prismaService.user
-      .findUnique({
-        where: {
-          id: userUniqueInput.id || undefined,
-          email: userUniqueInput.email || undefined,
-        },
-      })
-      .posts({ where: { published: false } });
+    return this.queryBus.execute(
+      new GetDraftsByUserQuery(userUniqueInput.id, userUniqueInput.email),
+    );
   }
 }
